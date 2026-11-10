@@ -1,0 +1,37 @@
+{
+  "name": "fleet-control-api",
+  "version": "1.0.0",
+  "description": "Web API to control the use of a company's cars",
+  "private": true,
+  "type": "module",
+  "main": "src/main.js",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/main.js",
+    "dev": "node --env-file-if-exists=.env --watch src/main.js",
+    "test": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/**/*.test.js\"",
+    "test:unit": "node --test \"test/unit/**/*.test.js\"",
+    "test:integration": "node --env-file-if-exists=.env --test --test-concurrency=1 \"test/integration/**/*.test.js\"",
+    "docker:up": "docker compose up --build -d --wait && node --env-file-if-exists=.env scripts/show-links.js",
+    "links": "node --env-file-if-exists=.env scripts/show-links.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@scalar/express-api-reference": "^0.10.35",
+    "express": "^5.3.0",
+    "pg": "^8.23.1",
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "supertest": "^7.3.2"
+  }
+}

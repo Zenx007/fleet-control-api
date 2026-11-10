@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documentação - Fleet Control API</title>
+    <link rel="icon" href="data:," />
+    <script>
+      (function () {
+        var saved = null;
+        try {
+          saved = localStorage.getItem('theme');
+        } catch (error) {}
+        if (saved === 'light' || saved === 'dark') {
+          document.documentElement.dataset.theme = saved;
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        color-scheme: light;
+        --background: #f4f5f1;
+        --surface: #ffffff;
+        --text: #1b1f1d;
+        --text-muted: #5b645f;
+        --border: #d9ddd5;
+        --swagger: #2f7d32;
+        --scalar: #4b4fc4;
+        --focus: #1b1f1d;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          color-scheme: dark;
+          --background: #121513;
+          --surface: #1c211e;
+          --text: #eef1ec;
+          --text-muted: #a3ada7;
+          --border: #333b36;
+          --swagger: #7bcf7f;
+          --scalar: #a5a8f5;
+          --focus: #eef1ec;
+        }
+      }
+
+      :root[data-theme='dark'] {
+        color-scheme: dark;
+        --background: #121513;
+        --surface: #1c211e;
+        --text: #eef1ec;
+        --text-muted: #a3ada7;
+        --border: #333b36;
+        --swagger: #7bcf7f;
+        --scalar: #a5a8f5;
+        --focus: #eef1ec;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        background: var(--background);
+        color: var(--text);
+        font-family:
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          'Segoe UI',
+          Roboto,
+          sans-serif;
+        line-height: 1.5;
+      }
+
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 3px;
+      }
+
+      .top-bar,
+      main,
+      .footer {
+        width: 100%;
+        max-width: 880px;
+        margin: 0 auto;
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 24px;
+      }
+
+      .brand {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 40px;
+        padding: 0 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+        font: inherit;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .theme-toggle:hover {
+        border-color: var(--text-muted);
+      }
+
+      .theme-toggle svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 48px;
+        padding-bottom: 48px;
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(30px, 6vw, 42px);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      .intro {
+        margin: 0 0 36px;
+        color: var(--text-muted);
+        font-size: 18px;
+      }
+
+      .options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .option {
+        --accent: var(--swagger);
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-top: 4px solid var(--accent);
+        border-radius: 8px;
+        background: var(--surface);
+        color: inherit;
+        text-decoration: none;
+        transition:
+          transform 0.15s ease,
+          border-color 0.15s ease;
+      }
+
+      .option.scalar {
+        --accent: var(--scalar);
+      }
+
+      .option:hover {
+        transform: translateY(-2px);
+        border-color: var(--accent);
+      }
+
+      .option-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .option-logo {
+        width: 40px;
+        height: 40px;
+        flex: none;
+      }
+
+      .option h2 {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .option p {
+        flex: 1;
+        margin: 0 0 20px;
+        color: var(--text-muted);
+      }
+
+      .open-link {
+        color: var(--accent);
+        font-weight: 600;
+      }
+
+      .footer {
+        padding-bottom: 24px;
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .footer a {
+        color: inherit;
+      }
+
+      @media (max-width: 620px) {
+        .options {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .top-bar,
+        main,
+        .footer {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .option {
+          transition: none;
+        }
+
+        .option:hover {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="top-bar">
+      <span class="brand">Fleet Control API</span>
+      <button class="theme-toggle" id="theme-toggle" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path id="theme-icon" d=""></path>
+        </svg>
+        <span id="theme-label"></span>
+      </button>
+    </header>
+
+    <main>
+      <h1>Documentação da API</h1>
+      <p class="intro">Escolha como você quer consultar e testar os endpoints.</p>
+
+      <div class="options">
+        <a class="option" href="/docs/swagger/">
+          <div class="option-header">
+            <svg class="option-logo" viewBox="0 0 100.4 100.1" aria-hidden="true">
+              <path
+                fill="#85ea2d"
+                d="M50.328 97.669a47.642 47.642 0 1 1 47.643-47.642 47.64 47.64 0 0 1-47.643 47.642"
+              ></path>
+              <path
+                fill="#85ea2d"
+                d="M50.328 4.769A45.258 45.258 0 1 1 5.07 50.027 45.26 45.26 0 0 1 50.328 4.769m0-4.769a50.027 50.027 0 1 0 50.027 50.027A50.027 50.027 0 0 0 50.328 0"
+              ></path>
+              <path
+                fill="#173647"
+                d="M31.8 33.854c-.154 1.712.058 3.482-.057 5.213a43 43 0 0 1-.693 5.156 9.53 9.53 0 0 1-4.1 5.829c4.079 2.654 4.54 6.771 4.81 10.946.135 2.25.077 4.52.308 6.752.173 1.731.846 2.174 2.636 2.231.73.02 1.48 0 2.327 0v5.349c-5.29.9-9.657-.6-10.734-5.079a31 31 0 0 1-.654-5c-.117-1.789.076-3.578-.058-5.367-.386-4.906-1.02-6.56-5.713-6.791v-6.1a9 9 0 0 1 1.028-.173c2.577-.135 3.674-.924 4.231-3.463a29 29 0 0 0 .481-4.329 82 82 0 0 1 .6-8.406c.673-3.982 3.136-5.906 7.234-6.137 1.154-.057 2.327 0 3.655 0v5.464c-.558.038-1.039.115-1.539.115-3.336-.115-3.51 1.02-3.762 3.79m6.406 12.658h-.077a3.515 3.515 0 1 0-.346 7.021h.231a3.46 3.46 0 0 0 3.655-3.251v-.192a3.523 3.523 0 0 0-3.461-3.578Zm12.062 0a3.373 3.373 0 0 0-3.482 3.251 2 2 0 0 0 .02.327 3.3 3.3 0 0 0 3.578 3.443 3.263 3.263 0 0 0 3.443-3.558 3.308 3.308 0 0 0-3.557-3.463Zm12.351 0a3.59 3.59 0 0 0-3.655 3.482 3.53 3.53 0 0 0 3.536 3.539h.039c1.769.309 3.559-1.4 3.674-3.462a3.57 3.57 0 0 0-3.6-3.559Zm16.948.288c-2.232-.1-3.348-.846-3.9-2.962a21.5 21.5 0 0 1-.635-4.136c-.154-2.578-.135-5.175-.308-7.753-.4-6.117-4.828-8.252-11.254-7.195v5.31c1.019 0 1.808 0 2.6.019 1.366.019 2.4.539 2.539 2.059.135 1.385.135 2.789.27 4.193.269 2.79.422 5.618.9 8.369a8.72 8.72 0 0 0 3.921 5.348c-3.4 2.289-4.406 5.559-4.578 9.234-.1 2.52-.154 5.059-.289 7.6-.115 2.308-.923 3.058-3.251 3.116-.654.019-1.289.077-2.019.115v5.445c1.365 0 2.616.077 3.866 0 3.886-.231 6.233-2.117 7-5.887A49 49 0 0 0 75 63.4c.135-1.923.116-3.866.308-5.771.289-2.982 1.655-4.213 4.636-4.4a4 4 0 0 0 .828-.192v-6.1c-.5-.058-.843-.115-1.208-.135Z"
+              ></path>
+            </svg>
+            <h2>Swagger UI</h2>
+          </div>
+          <p>
+            Interface clássica, com todos os endpoints agrupados e requisições enviadas direto da
+            página.
+          </p>
+          <span class="open-link">Abrir Swagger &rarr;</span>
+        </a>
+        <a class="option scalar" href="/docs/scalar">
+          <div class="option-header">
+            <svg class="option-logo" viewBox="0 0 593 593" fill="currentColor" aria-hidden="true">
+              <path
+                fill-rule="evenodd"
+                d="M347 0c6 0 12 5 12 12v134l94-95c5-5 13-5 17 0l72 72c4 4 5 12 0 16v1l-95 94h134c7 0 12 5 12 12v101c0 7-5 12-12 12H447l95 94c4 5 5 13 0 17l-72 72c-4 4-12 5-16 0h-1l-94-95v134c0 7-5 12-12 12H246c-7 0-12-5-12-12v-70c0-22 9-43 24-59l130-130c14-14 14-37 0-51L259 142a84 84 0 0 1-25-59V12c0-7 5-12 12-12zM138 52h1l219 219c14 14 14 37 0 51L139 542c-4 5-12 5-17 0l-71-70c-4-5-5-12 0-17l95-96H12c-7 0-12-5-12-12V246c0-7 5-12 12-12h134l-95-94c-4-5-4-12 0-17l71-71c4-5 12-5 16 0"
+              ></path>
+            </svg>
+            <h2>Scalar</h2>
+          </div>
+          <p>
+            Leitura em formato de referência, com exemplos de código e cliente de API integrado.
+          </p>
+          <span class="open-link">Abrir Scalar &rarr;</span>
+        </a>
+      </div>
+    </main>
+
+    <footer class="footer">
+      Especificação OpenAPI disponível em <a href="/openapi.json">/openapi.json</a>
+    </footer>
+
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var button = document.getElementById('theme-toggle');
+        var icon = document.getElementById('theme-icon');
+        var label = document.getElementById('theme-label');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+        var SUN =
+          'M12 3v2M12 19v2M5 5l1.4 1.4M17.6 17.6 19 19M3 12h2M19 12h2M5 19l1.4-1.4M17.6 6.4 19 5M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z';
+        var MOON = 'M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z';
+
+        function currentTheme() {
+          return root.dataset.theme || (prefersDark.matches ? 'dark' : 'light');
+        }
+
+        function updateButton() {
+          var isDark = currentTheme() === 'dark';
+          icon.setAttribute('d', isDark ? SUN : MOON);
+          label.textContent = isDark ? 'Modo claro' : 'Modo escuro';
+        }
+
+        button.addEventListener('click', function () {
+          var nextTheme = currentTheme() === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = nextTheme;
+          try {
+            localStorage.setItem('theme', nextTheme);
+          } catch (error) {}
+          updateButton();
+        });
+
+        prefersDark.addEventListener('change', updateButton);
+        updateButton();
+      })();
+    </script>
+  </body>
+</html>
